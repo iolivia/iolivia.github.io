@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://iolivia.github.io/sitemap.xml
+Host: https://iolivia.github.io
