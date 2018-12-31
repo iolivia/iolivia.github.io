@@ -24,7 +24,23 @@
   <p>
     I love technology and I love creating software that lasts. I occasionaly speak at events
     and run workshops.
-  </p>]]></description><link>http://iolivia.me</link><generator>RSS for Node</generator><lastBuildDate>Mon, 31 Dec 2018 16:56:53 GMT</lastBuildDate><item><title><![CDATA[FizzBuzz in 10 languages!]]></title><description><![CDATA[FizzBuzz , as you might have heard, is a simple programming challenge given as an interview question to see if someone can code or not…]]></description><link>http://iolivia.me/posts/fizzbuzz-in-10-languages/</link><guid isPermaLink="false">http://iolivia.me/posts/fizzbuzz-in-10-languages/</guid><pubDate>Sat, 29 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;a href=&quot;https://www.hackerrank.com/challenges/fizzbuzz/problem&quot;&gt;FizzBuzz&lt;/a&gt;, as you might have heard, is a simple programming challenge given as an interview question to see if someone can code or not. &lt;/p&gt;
+  </p>]]></description><link>http://iolivia.me</link><generator>RSS for Node</generator><lastBuildDate>Mon, 31 Dec 2018 19:16:24 GMT</lastBuildDate><item><title><![CDATA[Design patterns]]></title><description><![CDATA[what are design patterns? Let's start by defining design patterns. All this talk these days, but what are they really? Well, simply put…]]></description><link>http://iolivia.me/posts/design-patterns/</link><guid isPermaLink="false">http://iolivia.me/posts/design-patterns/</guid><pubDate>Mon, 31 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;what are design patterns?&lt;/h2&gt;
+&lt;p&gt;Let&apos;s start by defining design patterns. All this talk these days, but what are they really? Well, simply put, design patterns are solutions to common problems in software design. To avoid solving the same problems over and over again in different ways, &lt;em&gt;we&lt;/em&gt; (the software community) have created a set of common patterns to help us. These patterns are rough blueprints which have some amount of flexibility built in so you can apply them to your usecase and/or combine them as necessary.&lt;/p&gt;
+&lt;h2&gt;why should I use them?&lt;/h2&gt;
+&lt;p&gt;Now for the bigger question, they are useful, I get it, but why should I use them? Well, if you are building a solution for FizzBuzz which you are going to throw away five minutes later, you probably dont need design patterns. But if you are going to build something which you&apos;ll have to extend tomorrow, ship and maintain for years to come, it&apos;s a good idea to throw in some design patterns to keep it maintainable, extensible and robust.&lt;/p&gt;
+&lt;p&gt;Design patterns are less about the functional side of things, they are not algorithmically intense recipies for solving problems, but rather a question of form and style.&lt;/p&gt;
+&lt;p&gt;Take these two pieces of code.&lt;/p&gt;
+&lt;h2&gt;what are some common design patterns?&lt;/h2&gt;
+&lt;p&gt;Here are some frequently used design patterns which you might have already heard of:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;factory &lt;/li&gt;
+&lt;li&gt;singleton &lt;/li&gt;
+&lt;li&gt;facade&lt;/li&gt;
+&lt;li&gt;decorator&lt;/li&gt;
+&lt;li&gt;iterator &lt;/li&gt;
+&lt;li&gt;adaptor&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If none of these ring a bell don&apos;t worry about it, we&apos;ll cover them in a few minutes. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[FizzBuzz in 10 languages!]]></title><description><![CDATA[FizzBuzz , as you might have heard, is a simple programming challenge given as an interview question to see if someone can code or not…]]></description><link>http://iolivia.me/posts/fizzbuzz-in-10-languages/</link><guid isPermaLink="false">http://iolivia.me/posts/fizzbuzz-in-10-languages/</guid><pubDate>Sat, 29 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;a href=&quot;https://www.hackerrank.com/challenges/fizzbuzz/problem&quot;&gt;FizzBuzz&lt;/a&gt;, as you might have heard, is a simple programming challenge given as an interview question to see if someone can code or not. &lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Write a short program that prints each number 
 from 1 to 100 on a new line. 
 
@@ -210,7 +226,7 @@ print &amp;quot;FizzBuzz&amp;quot; instead of the number.&lt;/code&gt;&lt;/pre&g
 ++&amp;gt;-]]&amp;lt;[.[-]&amp;lt;]&amp;lt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;-]&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Wow. I spent a good afternoon on this and I solved like 80% of the problem. 1435 characters. But I will say this, getting anything to work in brainfuck was amazing. Even printing something so simple as Fizz is incredibly rewarding, cause you have to build those ASCII codes yourself. &lt;/p&gt;
 &lt;p&gt;The best part though, in a normal language when you are stuck on something, you can easily google around for an answer. You look at some snippet of code and you&apos;re like: ah, I get it now. I was so silly. Doing the same for brainfuck just doesn&apos;t work. You look at how to do a modulus, you see &lt;code class=&quot;language-text&quot;&gt;[&amp;gt;+&amp;gt;-&amp;gt;+&amp;lt;[&amp;gt;]&amp;gt;[&amp;lt;+&amp;gt;-]&amp;lt;&amp;lt;[&amp;lt;]&amp;gt;-]&lt;/code&gt; and you&apos;re like: well, I (still) don&apos;t get it. &lt;/p&gt;
-&lt;p&gt;But it was fun! It also peaked my interest into the &lt;a href=&quot;https://en.wikipedia.org/wiki/Esoteric_programming_language&quot;&gt;esoteric languages&lt;/a&gt;. Shakespeare and Chef also sounded interesting but didn&apos;t get to those yet. &lt;/p&gt;
+&lt;p&gt;But it was fun! It also piqued my interest into the &lt;a href=&quot;https://en.wikipedia.org/wiki/Esoteric_programming_language&quot;&gt;esoteric languages&lt;/a&gt;. Shakespeare and Chef also sounded interesting but didn&apos;t get to those yet. &lt;/p&gt;
 &lt;h2&gt;bash&lt;/h2&gt;
 &lt;p&gt;I needed a quick break to keep me going after the brainfuck adventure and bash did the trick. Ugly syntax if you ask me but overall nothing special or unexpected.&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token shebang important&quot;&gt;#!/bin/bash&lt;/span&gt;
@@ -283,7 +299,7 @@ print &amp;quot;FizzBuzz&amp;quot; instead of the number.&lt;/code&gt;&lt;/pre&g
 &lt;p&gt;10 languages and a couple of afternoons later, what have I learnt? &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;I genuinely enjoy writing code even for the sake of writing code&lt;/li&gt;
-&lt;li&gt;Most languages that we use every day really aren&apos;t that different from eachother on a fundamental syntax level, they all have for loops and ifs and variables, etc.&lt;/li&gt;
+&lt;li&gt;Most languages that we use every day really aren&apos;t that different from each other on a fundamental syntax level, they all have for loops and ifs and variables, etc.&lt;/li&gt;
 &lt;li&gt;Functional, declarative and low-level languages are fundamentally different from the rest and programming in them requires a complete mind shift (like operating on a list in haskell using recursion instead of a loop, or moving the register pointer around in brainfuck)&lt;/li&gt;
 &lt;li&gt;Language syntax has evolved somewhat from verbose to implicit and elegant (not sure if that is a good or bad thing, probably neither)&lt;/li&gt;
 &lt;/ul&gt;
