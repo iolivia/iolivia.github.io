@@ -24,7 +24,7 @@
   <p>
     I love technology and I love creating software that lasts. I occasionaly speak at events
     and run workshops.
-  </p>]]></description><link>http://iolivia.me</link><generator>RSS for Node</generator><lastBuildDate>Tue, 01 Jan 2019 19:01:05 GMT</lastBuildDate><item><title><![CDATA[Design patterns]]></title><description><![CDATA[what are design patterns? Let's start by defining design patterns. All this talk these days, but what are they really? Well, simply put…]]></description><link>http://iolivia.me/posts/design-patterns/</link><guid isPermaLink="false">http://iolivia.me/posts/design-patterns/</guid><pubDate>Mon, 31 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;what are design patterns?&lt;/h2&gt;
+  </p>]]></description><link>http://iolivia.me</link><generator>RSS for Node</generator><lastBuildDate>Tue, 01 Jan 2019 19:02:13 GMT</lastBuildDate><item><title><![CDATA[Design patterns]]></title><description><![CDATA[what are design patterns? Let's start by defining design patterns. All this talk these days, but what are they really? Well, simply put…]]></description><link>http://iolivia.me/posts/design-patterns/</link><guid isPermaLink="false">http://iolivia.me/posts/design-patterns/</guid><pubDate>Mon, 31 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;what are design patterns?&lt;/h2&gt;
 &lt;p&gt;Let&apos;s start by defining design patterns. All this talk these days, but what are they really? Well, simply put, design patterns are solutions to common problems in software design. To avoid solving the same problems over and over again in different ways, &lt;em&gt;we&lt;/em&gt; (the software community) have created a set of common patterns to help us. These patterns are rough blueprints which have some amount of flexibility built in so you can apply them to your usecase and/or combine them as necessary.&lt;/p&gt;
 &lt;h2&gt;why should I use them?&lt;/h2&gt;
 &lt;p&gt;Now for the bigger question, they are useful, I get it, but why should I use them? Well, if you are building a solution for FizzBuzz which you are going to throw away five minutes later, you probably dont need design patterns. But if you are going to build something which you&apos;ll have to extend tomorrow, ship and maintain for years to come, it&apos;s a good idea to throw in some design patterns to keep it maintainable, extensible and robust.&lt;/p&gt;
@@ -39,45 +39,7 @@
 &lt;li&gt;iterator &lt;/li&gt;
 &lt;li&gt;adaptor&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;If none of these ring a bell don&apos;t worry about it, we&apos;ll cover them in another post.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Rummikub rust]]></title><description><![CDATA[docs/resources  I used:
- https://doc.rust-lang.org/ 
- https://doc.rust-lang.org/rust-by-example/custom_types.html 
- https://stevedonovan…]]></description><link>http://iolivia.me/posts/rummikub-rust/</link><guid isPermaLink="false">http://iolivia.me/posts/rummikub-rust/</guid><pubDate>Mon, 31 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;docs/resources  I used:
-&lt;a href=&quot;https://doc.rust-lang.org/&quot;&gt;https://doc.rust-lang.org/&lt;/a&gt;
-&lt;a href=&quot;https://doc.rust-lang.org/rust-by-example/custom_types.html&quot;&gt;https://doc.rust-lang.org/rust-by-example/custom_types.html&lt;/a&gt;
-&lt;a href=&quot;https://stevedonovan.github.io/rust-gentle-intro/2-structs-enums-lifetimes.html#structs&quot;&gt;https://stevedonovan.github.io/rust-gentle-intro/2-structs-enums-lifetimes.html#structs&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I dont know rust
-not trying to write the best rust, just trying to learn something new and have fun&lt;/p&gt;
-&lt;p&gt;step1: write a Tile class
-no classes per se, structs or traits? mmkay ..&lt;/p&gt;
-&lt;p&gt;step2: make the color an enum
-so far so good
-I like that it tells me that the enums are not used, super strict (in a nice way)&lt;/p&gt;
-&lt;p&gt;step3: make a player struct
-done
-got a bit sick of recompiling so I started using cargo-watch.&lt;/p&gt;
-&lt;p&gt;step4: generate a deck
-value borrowed here aftermove. what?
-created deck struct
-now let&apos;s fill it with the full cards
-clone vs copy, need to understand more here
-Using the first dependency for the enums, quite suprising we got so far tbh&lt;/p&gt;
-&lt;p&gt;step5: assign hands to players
-done, all in main now so it&apos;s a bit messy
-create a controller class&lt;/p&gt;
-&lt;p&gt;step5: let&apos;s draw!&lt;/p&gt;
-&lt;p&gt;step6: turns
-on each turn we need to:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;for each player&lt;/li&gt;
-&lt;li&gt;take a card (from previous player or the deck) (unless it&apos;s the firs time in which case we skip this)&lt;/li&gt;
-&lt;li&gt;put down card from their deck&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Rules I am skipping for now:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;jokers&lt;/li&gt;
-&lt;li&gt;piece you use to count&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[FizzBuzz in 10 languages!]]></title><description><![CDATA[FizzBuzz , as you might have heard, is a simple programming challenge given as an interview question to see if someone can code or not…]]></description><link>http://iolivia.me/posts/fizzbuzz-in-10-languages/</link><guid isPermaLink="false">http://iolivia.me/posts/fizzbuzz-in-10-languages/</guid><pubDate>Sat, 29 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;a href=&quot;https://www.hackerrank.com/challenges/fizzbuzz/problem&quot;&gt;FizzBuzz&lt;/a&gt;, as you might have heard, is a simple programming challenge given as an interview question to see if someone can code or not. &lt;/p&gt;
+&lt;p&gt;If none of these ring a bell don&apos;t worry about it, we&apos;ll cover them in another post.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[FizzBuzz in 10 languages!]]></title><description><![CDATA[FizzBuzz , as you might have heard, is a simple programming challenge given as an interview question to see if someone can code or not…]]></description><link>http://iolivia.me/posts/fizzbuzz-in-10-languages/</link><guid isPermaLink="false">http://iolivia.me/posts/fizzbuzz-in-10-languages/</guid><pubDate>Sat, 29 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;a href=&quot;https://www.hackerrank.com/challenges/fizzbuzz/problem&quot;&gt;FizzBuzz&lt;/a&gt;, as you might have heard, is a simple programming challenge given as an interview question to see if someone can code or not. &lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Write a short program that prints each number 
 from 1 to 100 on a new line. 
 
@@ -85,7 +47,7 @@ from 1 to 100 on a new line.
 &amp;gt; For each multiple of 5, print &amp;quot;Buzz&amp;quot; instead of the number. 
 &amp;gt; For numbers which are multiples of both 3 and 5, 
 print &amp;quot;FizzBuzz&amp;quot; instead of the number.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Simple modulo operations to see if something is divisible by 3 and/or 5, a loop and printing to the console. It doesn&apos;t sound complicated. And it isn&apos;t unless you are doing it in an obscure language you&apos;ve never used before or in a programming paradigm which is less than common. So the thought occurred to me, FizzBuzz is actually perfect for learning the basics of a new language. It&apos;s simple enough, it doesn&apos;t leave much room for interpretation and we&apos;ve all done it before in a language we are familiar with. &lt;/p&gt;
+&lt;p&gt;Simple modulo operations to see if something is divisible by 3 and/or 5, a loop and printing to the console. It doesn&apos;t sound complicated. And it isn&apos;t, unless you are doing it in an obscure language you&apos;ve never used before or in a programming paradigm which is less than common. So the thought occurred to me, FizzBuzz is actually perfect for learning the basics of a new language. It&apos;s simple enough, it doesn&apos;t leave much room for interpretation and we&apos;ve all done it before in a language we are familiar with. &lt;/p&gt;
 &lt;p&gt;So I thought to myself, why not use some time this holiday to experiment with FizzBuzz? Oh boy did I experiment. &lt;/p&gt;
 &lt;h2&gt;javascript (node)&lt;/h2&gt;
 &lt;p&gt;I started with JavaScript, more for calibration purposes if nothing else. To remind myself of the problem and do it in a language I am very familiar with. Nothing special, here it is. &lt;/p&gt;
