@@ -24,7 +24,165 @@
   <p>
     I love technology and I love creating software that lasts. I occasionaly speak at events
     and run workshops.
-  </p>]]></description><link>http://iolivia.me</link><generator>RSS for Node</generator><lastBuildDate>Sat, 05 Jan 2019 12:03:19 GMT</lastBuildDate><item><title><![CDATA[Design patterns]]></title><description><![CDATA[what are design patterns? Let's start by defining design patterns. All this talk these days, but what are they really? Well, simply put…]]></description><link>http://iolivia.me/posts/design-patterns/</link><guid isPermaLink="false">http://iolivia.me/posts/design-patterns/</guid><pubDate>Mon, 31 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;what are design patterns?&lt;/h2&gt;
+  </p>]]></description><link>http://iolivia.me</link><generator>RSS for Node</generator><lastBuildDate>Fri, 01 Mar 2019 18:05:56 GMT</lastBuildDate><item><title><![CDATA[24 hours of game development in Rust]]></title><description><![CDATA[In this post I'll talk about a small game I've been developing in about 24 hours in total (mostly in a few hour blocks during evenings or…]]></description><link>http://iolivia.me/posts/24-hours-of-rust-game-dev/</link><guid isPermaLink="false">http://iolivia.me/posts/24-hours-of-rust-game-dev/</guid><pubDate>Fri, 01 Mar 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;In this post I&apos;ll talk about a small game I&apos;ve been developing in about 24 hours in total (mostly in a few hour blocks during evenings or weekends). The game is far from finished, but I thought I&apos;d write up about my experience so far, what I&apos;ve learnt and some interesting observations about building a game from scratch-ish and doing it in Rust. &lt;/p&gt;
+&lt;h2&gt;Why Rust?&lt;/h2&gt;
+&lt;p&gt;I picked Rust because I&apos;ve been hearing great things about it and I see it&apos;s been getting some traction in the game development space. I have to say at the point which I started this game I had written a few small programs in Rust, just enough to not feel like my hands were tied when I started writing the game. &lt;/p&gt;
+&lt;h2&gt;Why a game and what game?&lt;/h2&gt;
+&lt;p&gt;Making games is fun! I wish there was a more elaborate reason than that, but for side projects I normally prefer things that are quite far from what I do daily at my job. Now, what game? I wanted to make a simulation game with a tennis theme, think like Cities Skylines meets Zoo Tycoon meets Prison Architect with tennis and pixel art. I haven&apos;t got it all figured out yet, but it&apos;s basically a tennis academy where people come and play tennis.&lt;/p&gt;
+&lt;h2&gt;Tech research&lt;/h2&gt;
+&lt;p&gt;I knew I wanted to use Rust, but I didn&apos;t know exactly how much &quot;from-scratch&quot; I wanted to make it. I didn&apos;t want to write pixel shaders, but I didn&apos;t want to use drag and drop either, so I had to pick something that gave me enough flexibility but also keep it interesting from an engineering perspective without going too low level. &lt;/p&gt;
+&lt;p&gt;I found a few useful resources which I&apos;ll link here in case you want to have a look: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://arewegameyet.com/&quot;&gt;Are we game yet&lt;/a&gt; - a list of game dev related Rust packages&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.reddit.com/r/rust_gamedev&quot;&gt;Rust game dev subreddit&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://kenney.nl&quot;&gt;Free pixel art&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I did a little research on Rust game engines and was left with two main contenders: Piston and ggez. I tried both in a previous small project and I ended up going with ggez because it seemed easier to use for a small 2D game. Piston&apos;s modularity seemed a bit unapproachable from a beginner&apos;s point a few.&lt;/p&gt;
+&lt;h2&gt;The basic game design&lt;/h2&gt;
+&lt;p&gt;I then spent a bit of time thinking about the game. The first step would be to have some floor on the screen, then some people, then some courts. Eventually, we&apos;ll need to assign people to courts, have them move there and waaay in the future, the people would have skills which would improve the more they play. There would need to be a sort of build mode so you can add people and courts and eventually all this would cost money.&lt;/p&gt;
+&lt;p&gt;At this point I felt like I had enough ideas to start coding. (being PM and dev is quite fun! I&apos;d still rather have a PM though ..)&lt;/p&gt;
+&lt;h2&gt;Making the game&lt;/h2&gt;
+&lt;h3&gt;The beginnings: circles and abstraction&lt;/h3&gt;
+&lt;p&gt;I pretty much ripped off a ggez sample and got a window with a circle in it up on the screen. Amazing! Next, some abstraction. I thought it would be a good idea to abstract the idea of a game object. Every game object can be rendered and updated, something like this (if you&apos;re rolling your eyes at this point, this was before I found out about ECS, so bear with me here). &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;rust&quot;&gt;&lt;pre class=&quot;language-rust&quot;&gt;&lt;code class=&quot;language-rust&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;// the game object trait&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;trait&lt;/span&gt; GameObject &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; _ctx&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; Context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&gt;&lt;/span&gt; GameResult&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ctx&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; Context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&gt;&lt;/span&gt; GameResult&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// a specific game object - Circle&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; Circle &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    position&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Point2&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+ &lt;span class=&quot;token keyword&quot;&gt;impl&lt;/span&gt; Circle &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;position&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Point2&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&gt;&lt;/span&gt; Circle &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        Circle &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; position &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;impl&lt;/span&gt; GameObject &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; Circle &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; _ctx&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; Context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&gt;&lt;/span&gt; GameResult&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token function&quot;&gt;Ok&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ctx&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; Context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&gt;&lt;/span&gt; GameResult&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; circle &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+            graphics&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;Mesh&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;new_circle&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; graphics&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;DrawMode&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;Fill&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;position&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;100.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;2.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+         graphics&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;circle&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; na&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;Point2&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token function&quot;&gt;Ok&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This allowed me to have a nice list of objects which I could update and render in a nice loop. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;rust&quot;&gt;&lt;pre class=&quot;language-rust&quot;&gt;&lt;code class=&quot;language-rust&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;impl&lt;/span&gt; event&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;EventHandler &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; MainState &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; context&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; Context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&gt;&lt;/span&gt; GameResult&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token comment&quot;&gt;// Update all objects&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; object &lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;objects&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;iter_mut&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            object&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token function&quot;&gt;Ok&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; context&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;mut&lt;/span&gt; Context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&gt;&lt;/span&gt; GameResult&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        graphics&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;clear&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token comment&quot;&gt;// Draw all objects&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; object &lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;objects&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;iter_mut&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            object&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        graphics&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;present&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token function&quot;&gt;Ok&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;At this point &lt;code class=&quot;language-text&quot;&gt;main.rs&lt;/code&gt; was the place to be, because every single line of code was there, so I spent some time breaking that up into separate files and rationalizing the directory structure a bit, so it looked like this now. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;resources -&amp;gt; this is where all the assets are (images)
+src
+-- entities
+---- game_object.rs
+---- circle.rs
+-- main.rs -&amp;gt; main loop &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;People, floors and images&lt;/h3&gt;
+&lt;p&gt;The next big milestone was creating a &lt;code class=&quot;language-text&quot;&gt;Person&lt;/code&gt; game object and loading images. I decided everything will be tile based (currently 32x32 tiles).&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/1-6424c665cb9442c5471a49d987954880.png&quot; alt=&quot;alt text&quot; title=&quot;People, floors and images&quot;&gt;&lt;/p&gt;
+&lt;h3&gt;Tennis courts&lt;/h3&gt;
+&lt;p&gt;I spent some time looking at images of tennis courts online and I figured I&apos;d want my tennis court to be 4*2 tiles. I would make an image that wide, or I could have 8 separate tiles. On further inspection I actually realized I only need 2 unique tiles to build the whole court. Let me explain. &lt;/p&gt;
+&lt;p&gt;2 unique tiles: 1 and 2. &lt;/p&gt;
+&lt;p&gt;Each section of the court is actually made up of either tile 1 or tile 2, either as is or rotated 180 degrees. &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/tennis_court-26dde1e6f7ec2459c89752754a048c04.png&quot; alt=&quot;alt text&quot; title=&quot;Constructing a tennis court&quot;&gt;&lt;/p&gt;
+&lt;h3&gt;A basic build mode&lt;/h3&gt;
+&lt;p&gt;Now that I could render floors, people and courts I figured I needed a basic build mode. I made it so that when a key was pressed, an object was selected and click would then place that type of object. For example, pressing 1 would give you a court and pressing 2 would give you a person.&lt;/p&gt;
+&lt;p&gt;That wasn&apos;t super useful as you needed to remember what 1 or 2 were, so I added a build-mode wireframe so you could at least know what object you had. Here it is in action.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/wireframes-e9663de17e6b402f43cab61e3905c874.gif&quot; alt=&quot;alt text&quot; title=&quot;Wireframes&quot;&gt;&lt;/p&gt;
+&lt;h3&gt;Questioning the architecture and refactoring&lt;/h3&gt;
+&lt;p&gt;I now had a few game objects: people, courts and floors. But in order to make the wireframes work I had to let every entity know if it was in wireframe mode and then in every draw call the entity would have to check if it was in wireframe mode and if it was draw a bounding box instead of an image. This didn&apos;t really feel right.&lt;/p&gt;
+&lt;p&gt;I started questioning the architecture and I could see some clear limitations:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Having every entity render and update itself was problematic - the entity wouldn&apos;t know if it should render an image or a wireframe&lt;/li&gt;
+&lt;li&gt;I had no good way of sharing properties and behaviour between entities - for example the &lt;code class=&quot;language-text&quot;&gt;is_build_mode&lt;/code&gt; property and draw behaviour. I could use inheritance (but Rust didn&apos;t have a very good way of doing this), but what I really want is composition.&lt;/li&gt;
+&lt;li&gt;I had no good way of having entities interact with eachother - which I definitely needed later in order to assign people to courts&lt;/li&gt;
+&lt;li&gt;The entities were mixing data and logic, which would very quickly get out of hand&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I did a bit more research and I found something called &lt;a href=&quot;https://en.wikipedia.org/wiki/Entity_component_system&quot;&gt;ECS - Entity Component System&lt;/a&gt; architecture which is mostly used in games. The gist of ECS is this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;separate data from logic&lt;/li&gt;
+&lt;li&gt;composition over inheritance&lt;/li&gt;
+&lt;li&gt;data oriented design&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In ECS terminology you have these 3 basic concepts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Entities: this is just a type of a thing referenced with an identifier (like a Player, Ball, etc.)&lt;/li&gt;
+&lt;li&gt;Components: these are what your entities are made up of. For example, you can have a Renderable component, a Position component, etc. This is purely data storage.&lt;/li&gt;
+&lt;li&gt;Systems: systems use entities and components and contain behaviour and logic based on that data. For example, you could have a rendering system which just iterates through all entities which contain renderable components and draws all of them.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The more I read about this the more I realized it would solve my current problems:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I could use composition over inheritance to break things out in a more systematic way&lt;/li&gt;
+&lt;li&gt;I could use systems to control behaviour without ending up with spaggheti code&lt;/li&gt;
+&lt;li&gt;I could share things like &lt;code class=&quot;language-text&quot;&gt;is_build_mode&lt;/code&gt; and have that wireframe logic in one place (in the rendering system). &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here is what I ended up with after implementing ECS (which in fairness, was pretty much a rewrite).&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;resources -&amp;gt; this is where all the assets are (images)
+src
+-- components
+---- position.rs
+---- person.rs
+---- tennis_court.rs
+---- floor.rs
+---- wireframe.rs
+---- mouse_tracked.rs
+-- resources
+---- mouse.rs
+-- systems
+---- rendering.rs
+-- constants.rs
+-- utils.rs
+-- world_factory.rs -&amp;gt; world factory functions 
+-- main.rs -&amp;gt; main loop &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Assigning people to courts&lt;/h3&gt;
+&lt;p&gt;After moving to ECS everything became relatively easy. I now had a systematic way of adding data to my entities and adding logic based on that data. This allowed me to very easily get the behaviour of assigning people to courts. &lt;/p&gt;
+&lt;p&gt;What I did:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;add data about assigned courts to &lt;code class=&quot;language-text&quot;&gt;Person&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;add data about assigned people to &lt;code class=&quot;language-text&quot;&gt;TennisCourt&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;add a &lt;code class=&quot;language-text&quot;&gt;CourtChoosingSystem&lt;/code&gt; which iterates through people and courts, finds available courts and assigns them to people. Easy!&lt;/li&gt;
+&lt;li&gt;add a &lt;code class=&quot;language-text&quot;&gt;PersonMovementSystem&lt;/code&gt; which iterates through people which have courts assigned to them and makes them move to the position of the courts (if they are not already there)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;See it in action here.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/people_to_courts-7b0c8ec951007ad4d5895716c3ca7618.gif&quot; alt=&quot;alt text&quot; title=&quot;People going to courts&quot;&gt;&lt;/p&gt;
+&lt;h2&gt;Wrapping up&lt;/h2&gt;
+&lt;p&gt;I had a really great time making this small game. But I especially had a great time writing so much Rust because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Rust makes doing the right thing easy &lt;/li&gt;
+&lt;li&gt;It&apos;s very elegant and has great documentation&lt;/li&gt;
+&lt;li&gt;Immutability by default is absolutely beautiful, it forces you to be explicit about mutability which makes you aware of how your data is being modified&lt;/li&gt;
+&lt;li&gt;No awkward moving, cloning or copying (like I found myself doing a lot in C++)&lt;/li&gt;
+&lt;li&gt;Options are really fantastic to work with and they make handling errors a thing of beauty&lt;/li&gt;
+&lt;li&gt;If it compiles, it 99% of the time works as you expected and compiler errors are probably the best I&apos;ve ever seen&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In terms of Rust game development, I think it&apos;s still early days, but I see a great community actively working towards making Rust more accessible to game developers. So I am optimistic about the next few years and I cannot wait to see how it evolves. &lt;/p&gt;
+&lt;p&gt;Did you enjoy this post? Let me know, so I can write more!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Design patterns]]></title><description><![CDATA[what are design patterns? Let's start by defining design patterns. All this talk these days, but what are they really? Well, simply put…]]></description><link>http://iolivia.me/posts/design-patterns/</link><guid isPermaLink="false">http://iolivia.me/posts/design-patterns/</guid><pubDate>Mon, 31 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;what are design patterns?&lt;/h2&gt;
 &lt;p&gt;Let&apos;s start by defining design patterns. All this talk these days, but what are they really? Well, simply put, design patterns are solutions to common problems in software design. To avoid solving the same problems over and over again in different ways, &lt;em&gt;we&lt;/em&gt; (the software community) have created a set of common patterns to help us. These patterns are rough blueprints which have some amount of flexibility built in so you can apply them to your usecase and/or combine them as necessary.&lt;/p&gt;
 &lt;h2&gt;why should I use them?&lt;/h2&gt;
 &lt;p&gt;Now for the bigger question, they are useful, I get it, but why should I use them? Well, if you are building a solution for FizzBuzz which you are going to throw away five minutes later, you probably dont need design patterns. But if you are going to build something which you&apos;ll have to extend tomorrow, ship and maintain for years to come, it&apos;s a good idea to throw in some design patterns to keep it maintainable, extensible and robust.&lt;/p&gt;
